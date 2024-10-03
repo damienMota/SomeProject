@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./my-frontend             # Path to your frontend Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"                   # Expose port 3000 for the frontend
+    depends_on:
+      - backend                        # Ensures backend starts before frontend
+
+  backend:
+    build: ./backend               # Path to your backend Dockerfile
+    container_name: backend
+    ports:
+      - "8080:8080"                   # Expose port 8080 for the backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/my_project_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Oimadi*1
+    depends_on:
+      - db                             # Ensures db starts before backend
+
+  db:
+    image: mysql:5.7                   # Use MySQL version 5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: Oimadi*1
+      MYSQL_DATABASE: my_project_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Oimadi*1
+    ports:
+      - "3306:3306"                    # Expose port 3306 for the database
+    volumes:
+      - mysql_data:/var/lib/mysql      # Persist MySQL data
+
+volumes:
+  mysql_data:                          # Define the volume for MySQL
+
