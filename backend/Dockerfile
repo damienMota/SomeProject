@@ -1,19 +1,21 @@
-# Use a base image with Java 17
+# Development Dockerfile
 FROM openjdk:17-jdk-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the JAR file from the build context
-COPY build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
+# Copy the Gradle files first for better caching
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
 
-# Define environment variables for database connectivity
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/my_project_db
-ENV SPRING_DATASOURCE_USERNAME=root
-ENV SPRING_DATASOURCE_PASSWORD=Oimadi*1
+# Make gradlew executable
+RUN chmod +x gradlew
 
-# Expose the application port
-EXPOSE 8080
+# Copy the source code
+COPY src src
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["./gradlew", "bootRun"]
+
+EXPOSE 8080

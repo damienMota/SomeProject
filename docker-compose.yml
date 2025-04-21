@@ -6,18 +6,29 @@ services:
     container_name: frontend
     ports:
       - "3000:3000"                   # Expose port 3000 for the frontend
+    volumes:
+      - ./my-frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - FAST_REFRESH=true
     depends_on:
       - backend                        # Ensures backend starts before frontend
 
   backend:
-    build: ./backend               # Path to your backend Dockerfile
+    build: ./backend
     container_name: backend
     ports:
-      - "8080:8080"                   # Expose port 8080 for the backend
+      - "8080:8080"
+    volumes:
+      - ./backend/src:/app/src
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/my_project_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Oimadi*1
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+      SPRING_DEVTOOLS_LIVERELOAD_ENABLED: "true"
     depends_on:
       - db                             # Ensures db starts before backend
 
@@ -27,8 +38,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: Oimadi*1
       MYSQL_DATABASE: my_project_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: Oimadi*1
     ports:
       - "3306:3306"                    # Expose port 3306 for the database
     volumes:
@@ -36,4 +45,4 @@ services:
 
 volumes:
   mysql_data:                          # Define the volume for MySQL
-
+  backend-gradle-cache:                # Define volume for Gradle cache
