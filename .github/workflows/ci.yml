@@ -3,10 +3,10 @@ name: SomeProject
 on:
   push:
     branches:
-      - main  # Trigger this workflow when pushing to the main branch
+      - master  # Trigger this workflow when pushing to the main branch
   pull_request:
     branches:
-      - main  # Trigger this workflow for PRs targeting the main branch
+      - master  # Trigger this workflow for PRs targeting the main branch
 
 jobs:
   backend:
